@@ -1,53 +1,32 @@
 package br.com.alura.forum.services
 
-import br.com.alura.forum.entities.Course
 import br.com.alura.forum.entities.Topic
-import br.com.alura.forum.entities.User
+import br.com.alura.forum.entities.dto.TopicDto
 import org.springframework.stereotype.Service
 
 @Service
 class TopicService(
-        private var topics: List<Topic>
+        private var topics: List<Topic> = ArrayList(),
+        private val courseService: CourseService,
+        private val userService: UserService,
 ) {
-    init {
-       val topic1 =  Topic(
-                id = 1,
-                title = "Dúvida Kotlin",
-                message = "Variáveis no Kotlin",
-                course = Course(
-                        id = 1,
-                        name = "Kotlin",
-                        category = "Programação",
-                ),
-                user = User(
-                        id = 1,
-                        name = "Teste",
-                        email = "teste@teste.com"
-                )
-        )
-        val topic2 =  Topic(
-                id = 2,
-                title = "Dúvida Spring",
-                message = "Injeção de depêndencia",
-                course = Course(
-                        id = 2,
-                        name = "Spring Boot",
-                        category = "Programação",
-                ),
-                user = User(
-                        id = 2,
-                        name = "OutroTeste",
-                        email = "outroteste@teste.com"
-                )
-        )
-
-        topics = listOf(topic1, topic2)
-    }
     fun getTopic(): List<Topic> {
         return topics
     }
 
     fun getById(id: Long): Topic {
         return topics.first { it.id == id }
+    }
+
+    fun createTopic(topic: TopicDto): Topic {
+        val newTopic = Topic(
+                id = (topics.size + 1).toLong(),
+                title = topic.title,
+                message = topic.message,
+                course = courseService.findById(id = topic.idCourse),
+                user = userService.findById(id = topic.idAuthor)
+        )
+         topics = topics.plus(newTopic)
+        return newTopic
     }
 }
