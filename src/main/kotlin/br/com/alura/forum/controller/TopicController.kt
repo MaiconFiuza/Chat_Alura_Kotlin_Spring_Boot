@@ -3,6 +3,7 @@ package br.com.alura.forum.controller
 import br.com.alura.forum.services.TopicService
 import br.com.alura.forum.entities.Topic
 import br.com.alura.forum.entities.dto.TopicDto
+import br.com.alura.forum.entities.view.TopicView
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,7 +18,7 @@ class TopicController(
 ) {
 
     @GetMapping
-    fun getTopic(): List<Topic> {
+    fun getTopic(): List<TopicView> {
         return topicService.getTopic()
     }
 
@@ -27,7 +28,7 @@ class TopicController(
     }
 
     @PostMapping
-    fun postTopic(@RequestBody topic: TopicDto): Topic {
+    fun postTopic(@RequestBody topic: TopicDto): TopicView {
         return  topicService.createTopic(topic)
     }
 }
