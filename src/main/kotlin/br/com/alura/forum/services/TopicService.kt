@@ -2,6 +2,7 @@ package br.com.alura.forum.services
 
 import br.com.alura.forum.entities.Topic
 import br.com.alura.forum.entities.dto.TopicDto
+import br.com.alura.forum.entities.dto.UpdateTopic
 import br.com.alura.forum.entities.mapper.TopicMapper
 import br.com.alura.forum.entities.view.TopicView
 import org.springframework.stereotype.Service
@@ -31,5 +32,23 @@ class TopicService(
         )
          topics = topics.plus(newTopic)
         return topicMapper.map(newTopic)
+    }
+
+    fun updateTopic(updateTopic: UpdateTopic): TopicView {
+        val topic = topics.find { it.id == updateTopic.id }!!
+        val updatedTopic =Topic(
+                id = topic.id,
+                title = updateTopic.title,
+                message =  updateTopic.menssage,
+                createdIn = topic.createdIn,
+                course = topic.course,
+                user = topic.user,
+                status = topic.status,
+                responses = topic.responses,
+        )
+        topics = topics.minus(topic)
+                .plus(updatedTopic)
+
+        return topicMapper.map(updatedTopic)
     }
 }
