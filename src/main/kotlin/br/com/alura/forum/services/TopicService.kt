@@ -51,4 +51,9 @@ class TopicService(
 
         return topicMapper.map(updatedTopic)
     }
+
+    fun deleteById(id: Long) {
+       val topic = topics.find { it.id == id }!!
+       topics.minus(topic)
+    }
 }
