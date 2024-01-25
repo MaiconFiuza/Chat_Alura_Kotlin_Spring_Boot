@@ -5,6 +5,7 @@ import br.com.alura.forum.entities.dto.TopicDto
 import br.com.alura.forum.entities.dto.UpdateTopic
 import br.com.alura.forum.entities.mapper.TopicMapper
 import br.com.alura.forum.entities.view.TopicView
+import br.com.alura.forum.exception.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,6 +14,7 @@ class TopicService(
         private val courseService: CourseService,
         private val userService: UserService,
         private val topicMapper: TopicMapper,
+        private val notFoundException: String = "Id não encontrado"
 ) {
     fun getTopic(): List<TopicView> {
         return topics.map { topic -> topicMapper.map(topic) }
@@ -35,25 +37,38 @@ class TopicService(
     }
 
     fun updateTopic(updateTopic: UpdateTopic): TopicView {
-        val topic = topics.find { it.id == updateTopic.id }!!
-        val updatedTopic =Topic(
-                id = topic.id,
-                title = updateTopic.title,
-                message =  updateTopic.menssage,
-                createdIn = topic.createdIn,
-                course = topic.course,
-                user = topic.user,
-                status = topic.status,
-                responses = topic.responses,
-        )
-        topics = topics.minus(topic)
-                .plus(updatedTopic)
+        val topic = topics.find { it.id == updateTopic.id }
+        when (topic == null) {
+            true -> {
+                throw NotFoundException(notFoundException)
+            }
+            false -> {
+                val updatedTopic =Topic(
+                        id = topic.id,
+                        title = updateTopic.title,
+                        message =  updateTopic.menssage,
+                        createdIn = topic.createdIn,
+                        course = topic.course,
+                        user = topic.user,
+                        status = topic.status,
+                        responses = topic.responses,
+                )
+                topics = topics.minus(topic)
+                        .plus(updatedTopic)
 
-        return topicMapper.map(updatedTopic)
+                return topicMapper.map(updatedTopic)
+            }
+        }
     }
 
     fun deleteById(id: Long) {
-       val topic = topics.find { it.id == id }!!
-       topics.minus(topic)
+       val topic = topics.find { it.id == id }
+        when(topic == null) {
+            true -> {
+                throw NotFoundException(notFoundException)
+            }
+            false ->  topics.minus(topic)
+        }
+
     }
 }
