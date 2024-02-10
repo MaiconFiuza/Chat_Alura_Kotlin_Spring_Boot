@@ -1,26 +1,19 @@
 package br.com.alura.forum.services
 
 import br.com.alura.forum.entities.Course
+import br.com.alura.forum.exception.NotFoundException
+import br.com.alura.forum.repository.CourseRepository
 import org.springframework.stereotype.Service
 
 @Service
 class CourseService(
-        private var course: List<Course> = ArrayList()
+        private val courseRepository: CourseRepository,
+        private val notFoundException: String = "Id não encontrado"
 ){
-    init {
-     course = listOf(Course(
-                id = 1,
-                name = "Kotlin",
-                category = "Programation"
-        ), Course(
-                id = 2,
-                name = "AWS",
-                category = "Nuvem"
-        ))
-    }
-
 
     fun findById(id: Long): Course {
-       return course.stream().filter { c -> c.id == id }.findFirst().get()
+       return courseRepository.findById(id).orElseThrow {
+           throw NotFoundException(notFoundException)
+       }
     }
 }

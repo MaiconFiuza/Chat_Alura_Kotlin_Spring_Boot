@@ -8,6 +8,7 @@ import br.com.alura.forum.entities.view.TopicView
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -36,6 +37,7 @@ class TopicController(
     }
 
     @PostMapping
+    @Transactional
     fun postTopic(@RequestBody @Valid topic: TopicDto): ResponseEntity<TopicView> {
         val topicView = topicService.createTopic(topic)
         val uri = URI("/topic/${topicView.id}")
@@ -44,6 +46,7 @@ class TopicController(
     }
 
     @PutMapping
+    @Transactional
     fun updateTopic(@RequestBody @Valid updateTopic: UpdateTopic): ResponseEntity<TopicView> {
         val topicView =  topicService.updateTopic(updateTopic)
 
@@ -52,6 +55,7 @@ class TopicController(
 
     @DeleteMapping("/{id}") 
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun deleteTopic(@PathVariable id: Long){
        topicService.deleteById(id)
     }

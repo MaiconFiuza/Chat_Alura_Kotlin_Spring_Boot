@@ -4,11 +4,12 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "topic")
 data class Topic(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
-        val title: String,
-        val message: String,
+        var title: String,
+        var message: String,
         val createdIn: LocalDateTime =  LocalDateTime.now(),
         @ManyToOne
         val course: Course,
