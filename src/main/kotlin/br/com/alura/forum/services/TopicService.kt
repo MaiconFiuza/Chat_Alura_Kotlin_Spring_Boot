@@ -34,7 +34,7 @@ class TopicService(
                 title = topic.title,
                 message = topic.message,
                 course = courseService.findById(id = topic.idCourse),
-                user = userService.findById(id = topic.idAuthor)
+                author = userService.findById(id = topic.idAuthor)
         )
         topicRepository.save(newTopic)
         return topicMapper.map(newTopic)

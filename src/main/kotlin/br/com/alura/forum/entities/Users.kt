@@ -3,8 +3,7 @@ package br.com.alura.forum.entities
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "users")
-data class User(
+data class Users(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val name: String,
