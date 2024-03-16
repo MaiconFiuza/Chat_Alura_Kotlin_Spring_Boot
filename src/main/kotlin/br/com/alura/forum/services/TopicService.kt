@@ -17,8 +17,21 @@ class TopicService(
         private val topicMapper: TopicMapper,
         private val notFoundException: String = "Id não encontrado"
 ) {
-    fun getTopic(): List<TopicView> {
-        return topicRepository.findAll().map { topic -> topicMapper.map(topic) }
+    fun getTopic(
+        courseName: String?,
+        authorEmail: String?
+    ): List<TopicView> {
+        if (courseName == null && authorEmail == null) {
+            return topicRepository.findAll().map { topic -> topicMapper.map(topic) }
+        }
+
+        if (courseName != null) {
+            return  topicRepository.findByCourseName(courseName).map { topicMapper.map(it) }
+        } else {
+            return authorEmail?.let { topicRepository.findByAuthorEmail(it)
+                    .map { topicMapper.map(it) } } ?: throw NotFoundException(notFoundException)
+        }
+
     }
 
     fun getById(id: Long): Topic {
