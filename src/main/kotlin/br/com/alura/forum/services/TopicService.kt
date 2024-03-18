@@ -7,6 +7,8 @@ import br.com.alura.forum.entities.mapper.TopicMapper
 import br.com.alura.forum.entities.view.TopicView
 import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,17 +21,18 @@ class TopicService(
 ) {
     fun getTopic(
         courseName: String?,
-        authorEmail: String?
-    ): List<TopicView> {
+        authorEmail: String?,
+        pagination: Pageable,
+    ): Page<TopicView> {
         if (courseName == null && authorEmail == null) {
-            return topicRepository.findAll().map { topic -> topicMapper.map(topic) }
+            return topicRepository.findAll(pagination).map { topic -> topicMapper.map(topic) }
         }
 
         if (courseName != null) {
-            return  topicRepository.findByCourseName(courseName).map { topicMapper.map(it) }
+            return  topicRepository.findByCourseName(courseName, pagination).map { topicMapper.map(it) }
         } else {
-            return authorEmail?.let { topicRepository.findByAuthorEmail(it)
-                    .map { topicMapper.map(it) } } ?: throw NotFoundException(notFoundException)
+            return authorEmail?.let { topicRepository.findByAuthorEmail(it, pagination)
+                    .map { topicMapper.map(it) }} ?: throw NotFoundException(notFoundException)
         }
 
     }
