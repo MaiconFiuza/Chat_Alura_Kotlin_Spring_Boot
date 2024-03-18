@@ -6,6 +6,8 @@ import br.com.alura.forum.entities.dto.TopicDto
 import br.com.alura.forum.entities.dto.UpdateTopic
 import br.com.alura.forum.entities.view.TopicView
 import jakarta.validation.Valid
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -23,6 +25,7 @@ class TopicController(
 ) {
 
     @GetMapping
+    @Cacheable("topics")
     fun getTopic(
         @RequestParam(required = false) courseName: String?,
         @RequestParam(required = false) authorEmail: String?,
@@ -38,6 +41,7 @@ class TopicController(
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun postTopic(@RequestBody @Valid topic: TopicDto): ResponseEntity<TopicView> {
         val topicView = topicService.createTopic(topic)
         val uri = URI("/topic/${topicView.id}")
@@ -47,6 +51,7 @@ class TopicController(
 
     @PutMapping
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun updateTopic(@RequestBody @Valid updateTopic: UpdateTopic): ResponseEntity<TopicView> {
         val topicView =  topicService.updateTopic(updateTopic)
 
@@ -56,6 +61,7 @@ class TopicController(
     @DeleteMapping("/{id}") 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun deleteTopic(@PathVariable id: Long){
        topicService.deleteById(id)
     }
