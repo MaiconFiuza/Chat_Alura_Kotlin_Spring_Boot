@@ -2,6 +2,7 @@ package br.com.alura.forum.controller
 
 import br.com.alura.forum.services.TopicService
 import br.com.alura.forum.entities.Topic
+import br.com.alura.forum.entities.dto.TopicByCategory
 import br.com.alura.forum.entities.dto.TopicDto
 import br.com.alura.forum.entities.dto.UpdateTopic
 import br.com.alura.forum.entities.view.TopicView
@@ -32,6 +33,11 @@ class TopicController(
         @PageableDefault(size = 5, sort = ["createdIn"], direction = Sort.Direction.DESC) pagination: Pageable,
     ): Page<TopicView> {
         return topicService.getTopic(courseName, authorEmail, pagination)
+    }
+
+    @GetMapping("/report")
+    fun getTopicReport(): List<TopicByCategory>{
+        return topicService.getReport()
     }
 
     @GetMapping("/{id}")

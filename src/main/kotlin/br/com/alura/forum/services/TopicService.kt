@@ -1,6 +1,7 @@
 package br.com.alura.forum.services
 
 import br.com.alura.forum.entities.Topic
+import br.com.alura.forum.entities.dto.TopicByCategory
 import br.com.alura.forum.entities.dto.TopicDto
 import br.com.alura.forum.entities.dto.UpdateTopic
 import br.com.alura.forum.entities.mapper.TopicMapper
@@ -35,6 +36,10 @@ class TopicService(
                     .map { topicMapper.map(it) }} ?: throw NotFoundException(notFoundException)
         }
 
+    }
+
+    fun getReport(): List<TopicByCategory> {
+        return  topicRepository.report()
     }
 
     fun getById(id: Long): Topic {
