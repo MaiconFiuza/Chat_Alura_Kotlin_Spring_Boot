@@ -18,8 +18,9 @@ class TopicService(
         private val courseService: CourseService,
         private val userService: UserService,
         private val topicMapper: TopicMapper,
-        private val notFoundException: String = "Id não encontrado"
 ) {
+    private val notFoundException: String = "Id não encontrado"
+
     fun getTopic(
         courseName: String?,
         authorEmail: String?,

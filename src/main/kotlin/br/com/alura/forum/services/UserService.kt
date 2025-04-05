@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val notFoundException: String = "Usuário não encontrado"
 ){
+    private val notFoundException: String = "Usuário não encontrado"
+
     fun findById(id: Long): Users {
         return userRepository.findById(id).orElseThrow{ throw NotFoundException(notFoundException) }
     }
